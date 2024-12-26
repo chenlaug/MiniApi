@@ -75,34 +75,6 @@ namespace MiniApi.Controllers
             await _context.SaveChangesAsync();
             return Ok(raccoon);
         }
-
-        [HttpPost]
-        [Route("AddRaccoonToOwner")]
-        public async Task<ActionResult<Raccoon>> AddRaccoonToOwner(int raccoonId, int ownerId)
-        {
-            var raccoon = await _context.Raccoons
-                .Include(r => r.Owner)
-                .FirstOrDefaultAsync(r => r.Id == raccoonId);
-
-            var owner = await _context.Owners.FindAsync(ownerId);
-
-            if (raccoon == null)
-            {
-                return NotFound(new { message = "Raccoon not found", raccoonId });
-            }
-
-            if (owner == null)
-            {
-                return NotFound(new { message = "Owner not found", ownerId });
-            }
-
-            raccoon.OwnerId = owner.Id;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Raccoon successfully added to owner", raccoon });
-        }
-
     }
 }
 
